@@ -208,9 +208,9 @@ function returHundreds(string: string) {
 function returnCoinsWithNumber(string: string) {
   let returnedString = "";
   if (string.slice(0, 1) === "0") {
-    returnedString += string.slice(1, 2) + " ";
+    returnedString += ` ${string.slice(1, 2)} `;
   } else {
-    returnedString += `${string}0 `;
+    returnedString += ` ${string}0 `;
   }
   returnedString += " копійок";
   return returnedString;
