@@ -188,9 +188,9 @@ export default function convertToWords(number: number) {
     return returnedString.toString().replace(/,/g, "");
   }
   if (slicedNumber.length === 1) {
-    return `${hz4[parseInt(slicedNumber.slice(0, 1))]} 
-          ${returnHryvnias(slicedNumber.slice(0, 1))} 
-          ${returnCoinsWithNumber(numberAfterDot)}`;
+    return `${hz4[parseInt(slicedNumber.slice(0, 1))]} ${returnHryvnias(
+      slicedNumber.slice(0, 1)
+    )} ${returnCoinsWithNumber(numberAfterDot)}`;
   }
   return "Помилочка";
 }
