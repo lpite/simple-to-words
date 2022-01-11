@@ -1,15 +1,17 @@
 {
   "name": "simple-to-words",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
-  "author":"lpite",
+  "author": "lpite",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only index.ts"
   },
   "devDependencies": {
-    "typescript": "^2.7.2",
-    "tsc":"2.0.3"
-  }  
+    "ts-node-dev": "^1.1.8",
+    "tsc": "2.0.3",
+    "typescript": "^2.7.2"
+  }
 }

@@ -35,7 +35,7 @@ const dozens = [
   "вісімдесят",
   "дев'яносто",
 ];
-const hz4 = [
+const numbers = [
   "нуль",
   "одна",
   "дві",
@@ -105,7 +105,7 @@ export default function convertToWords(number: number) {
     } else {
       returnedString.push(returnDozens(slicedNumber.slice(0, 1)) + " ");
       if (slicedNumber.slice(1, 2) !== "0") {
-        returnedString.push(hz4[parseInt(slicedNumber.slice(1, 2))]);
+        returnedString.push(returnNumbers(slicedNumber.slice(1, 2)));
       }
     }
     returnedString.push(` тисяч ${returHundreds(slicedNumber.slice(2, 3))} `);
@@ -116,11 +116,11 @@ export default function convertToWords(number: number) {
     } else {
       returnedString.push(`${dozens[parseInt(slicedNumber.slice(3, 4))]} `);
       if (slicedNumber.slice(4, 5) !== "0") {
-        returnedString.push(` ${hz4[parseInt(slicedNumber.slice(4, 5))]} `);
+        returnedString.push(` ${returnNumbers(slicedNumber.slice(4, 5))} `);
       }
       returnedString.push(
         `
-              ${returnHryvnias(slicedNumber.slice(4, 5))} 
+              ${returnHryvnias(slicedNumber.slice(4, 5))}
               `
       );
     }
@@ -130,8 +130,8 @@ export default function convertToWords(number: number) {
   }
   if (slicedNumber.length === 4) {
     const returnedString = [];
-    returnedString.push(`${hz4[parseInt(slicedNumber.slice(0, 1))]} 
-          ${thousands[parseInt(slicedNumber.slice(0, 1))]} 
+    returnedString.push(`${returnNumbers(slicedNumber.slice(0, 1))}
+          ${thousands[parseInt(slicedNumber.slice(0, 1))]}
           ${returHundreds(slicedNumber.slice(1, 2))} `);
     //первые 3 буквы
     if (checkIfnumberBetwen11and19(slicedNumber.slice(2, 4))) {
@@ -142,11 +142,11 @@ export default function convertToWords(number: number) {
         //че за магия
       );
       if (slicedNumber.slice(3, 4) !== "0") {
-        returnedString.push(`${hz4[parseInt(slicedNumber.slice(3, 4))]}`);
+        returnedString.push(`${returnNumbers(slicedNumber.slice(3, 4))}`);
       }
     }
     returnedString.push(`
-          ${hryvnias[parseInt(slicedNumber.slice(3, 4))]} 
+          ${hryvnias[parseInt(slicedNumber.slice(3, 4))]}
           ${returnCoinsWithNumber(numberAfterDot)} `);
 
     return returnedString.toString().replace(/,/g, "");
@@ -154,20 +154,19 @@ export default function convertToWords(number: number) {
 
   if (slicedNumber.length === 3) {
     const returnedString = [];
-    returnedString.push(returHundreds(slicedNumber.slice(0, 1)) + " ");
+    returnedString.push(returHundreds(slicedNumber.slice(0, 1)));
     if (checkIfnumberBetwen11and19(slicedNumber.slice(1, 3))) {
       returnedString.push(
-        ` ${hz5[parseInt(slicedNumber.slice(2, 3))]} 
-              ${hryvnias[0]}`
+        ` ${hz5[parseInt(slicedNumber.slice(2, 3))]} ${hryvnias[0]}`
       );
     } else {
-      returnedString.push(dozens[parseInt(slicedNumber.slice(1, 2))] + " ");
+      returnedString.push(" "+dozens[parseInt(slicedNumber.slice(1, 2))] + " ");
       if (slicedNumber.slice(2, 3) !== "0") {
-        returnedString.push(hz4[parseInt(slicedNumber.slice(2, 3))] + " ");
+        returnedString.push(returnNumbers(slicedNumber.slice(2, 3)) + " ");
       }
-      returnedString.push(returnHryvnias(slicedNumber.slice(2, 3)) + " ");
+      returnedString.push(returnHryvnias(slicedNumber.slice(2, 3)));
     }
-    returnedString.push(` ${returnCoinsWithNumber(numberAfterDot)} `);
+    returnedString.push(`${returnCoinsWithNumber(numberAfterDot)}`);
     return returnedString.toString().replace(/,/g, "");
   }
 
@@ -175,22 +174,22 @@ export default function convertToWords(number: number) {
     const returnedString = [];
     if (checkIfnumberBetwen11and19(slicedNumber)) {
       returnedString.push(
-        `${hz5[parseInt(slicedNumber.slice(1, 2))]} гривень `
+        `${hz5[parseInt(slicedNumber.slice(1, 2))]} гривень`
       );
     } else {
       returnedString.push(returnDozens(slicedNumber.slice(0, 1)) + " ");
       if (slicedNumber.slice(1, 2) !== "0") {
-        returnedString.push(hz4[parseInt(slicedNumber.slice(1, 2))] + " ");
+        returnedString.push(returnNumbers(slicedNumber.slice(1, 2)) + " ");
       }
-      returnedString.push(returnHryvnias(slicedNumber.slice(1, 2)) + " ");
+      returnedString.push(returnHryvnias(slicedNumber.slice(1, 2)));
     }
-    returnedString.push(` ${returnCoinsWithNumber(numberAfterDot)} `);
+    returnedString.push(`${returnCoinsWithNumber(numberAfterDot)} `);
     return returnedString.toString().replace(/,/g, "");
   }
   if (slicedNumber.length === 1) {
-    return `${hz4[parseInt(slicedNumber.slice(0, 1))]} ${returnHryvnias(
+    return `${returnNumbers(slicedNumber.slice(0, 1))} ${returnHryvnias(
       slicedNumber.slice(0, 1)
-    )} ${returnCoinsWithNumber(numberAfterDot)}`;
+    )}${returnCoinsWithNumber(numberAfterDot)}`;
   }
   return "Помилочка";
 }
@@ -212,7 +211,7 @@ function returnCoinsWithNumber(string: string) {
   } else {
     returnedString += ` ${string}0 `;
   }
-  returnedString += " копійок";
+  returnedString += "копійок";
   return returnedString;
 }
 
@@ -226,4 +225,8 @@ function returnDozens(string: string) {
     return dozens[number];
   }
   return "";
+}
+function returnNumbers(string:string) {
+  const number = parseInt(string);
+  return numbers[number]
 }
