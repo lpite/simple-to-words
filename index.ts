@@ -48,7 +48,7 @@ const numbers = [
   "дев'ять",
   "десять",
 ];
-const hz5 = [
+const dozensBeetween11and19 = [
   "",
   "одинадцять",
   "дванадцять",
@@ -89,7 +89,7 @@ const hryvnias = [
 ];
 
 export default function convertToWords(number: number) {
-  const slicedNumber = number.toString().split(".")[0];
+  const numberBeforeDot = number.toString().split(".")[0];
   let numberAfterDot = number.toString().split(".")[1];
   if (!numberAfterDot) {
     numberAfterDot = "00";
@@ -98,98 +98,94 @@ export default function convertToWords(number: number) {
     numberAfterDot = numberAfterDot.slice(0, 2);
   }
 
-  if (slicedNumber.length === 5) {
-    const returnedString = [];
-    if (checkIfnumberBetwen11and19(slicedNumber.slice(0, 2))) {
-      returnedString.push(hz5[parseInt(slicedNumber.slice(1, 2))]);
+  if (numberBeforeDot.length === 5) {
+    const result: string[] = []
+    if (checkIfnumberBetwen11and19(numberBeforeDot.slice(0, 2))) {
+      result.push(dozensBeetween11and19[parseInt(numberBeforeDot.slice(1, 2))]);
     } else {
-      returnedString.push(returnDozens(slicedNumber.slice(0, 1)) + " ");
-      if (slicedNumber.slice(1, 2) !== "0") {
-        returnedString.push(returnNumbers(slicedNumber.slice(1, 2)));
+      result.push(returnDozens(numberBeforeDot.slice(0, 1)));
+      if (numberBeforeDot.slice(1, 2) !== "0") {
+        result.push(returnNumbers(numberBeforeDot.slice(1, 2)));
       }
     }
-    returnedString.push(` тисяч ${returHundreds(slicedNumber.slice(2, 3))} `);
-    if (checkIfnumberBetwen11and19(slicedNumber.slice(3, 5))) {
-      returnedString.push(
-        `${hz5[parseInt(slicedNumber.slice(4, 5))]} гривень `
+    result.push(`тисяч ${returHundreds(numberBeforeDot.slice(2, 3))}`);
+    if (checkIfnumberBetwen11and19(numberBeforeDot.slice(3, 5))) {
+      result.push(
+        `${dozensBeetween11and19[parseInt(numberBeforeDot.slice(4, 5))]} гривень`
       );
     } else {
-      returnedString.push(`${dozens[parseInt(slicedNumber.slice(3, 4))]} `);
-      if (slicedNumber.slice(4, 5) !== "0") {
-        returnedString.push(` ${returnNumbers(slicedNumber.slice(4, 5))} `);
+      result.push(`${dozens[parseInt(numberBeforeDot.slice(3, 4))]}`);
+      if (numberBeforeDot.slice(4, 5) !== "0") {
+        result.push(returnNumbers(numberBeforeDot.slice(4, 5)));
       }
-      returnedString.push(
-        `
-              ${returnHryvnias(slicedNumber.slice(4, 5))}
-              `
-      );
+      result.push(returnHryvnias(numberBeforeDot.slice(4, 5)));
     }
 
-    returnedString.push(`${returnCoinsWithNumber(numberAfterDot)}`);
-    return returnedString.toString().replace(/,/g, "");
+    result.push(returnCoinsWithNumber(numberAfterDot));
+    const resultString = result.join(" ");
+    return resultString
   }
-  if (slicedNumber.length === 4) {
-    const returnedString = [];
-    returnedString.push(`${returnNumbers(slicedNumber.slice(0, 1))}
-          ${thousands[parseInt(slicedNumber.slice(0, 1))]}
-          ${returHundreds(slicedNumber.slice(1, 2))} `);
-    //первые 3 буквы
-    if (checkIfnumberBetwen11and19(slicedNumber.slice(2, 4))) {
-      returnedString.push(hz5[parseInt(slicedNumber.slice(3, 4))]);
+  if (numberBeforeDot.length === 4) {
+    const result: string[] = []
+    result.push(returnNumbers(numberBeforeDot.slice(0, 1)));
+    result.push(thousands[parseInt(numberBeforeDot.slice(0, 1))])
+    result.push(returHundreds(numberBeforeDot.slice(1, 2)));
+    if (checkIfnumberBetwen11and19(numberBeforeDot.slice(2, 4))) {
+      result.push(dozensBeetween11and19[parseInt(numberBeforeDot.slice(3, 4))]);
     } else {
-      returnedString.push(
-        `${dozens[parseInt(slicedNumber.slice(2, 3))]} `
-        //че за магия
-      );
-      if (slicedNumber.slice(3, 4) !== "0") {
-        returnedString.push(`${returnNumbers(slicedNumber.slice(3, 4))}`);
+      result.push(dozens[parseInt(numberBeforeDot.slice(2, 3))]);
+      if (numberBeforeDot.slice(3, 4) !== "0") {
+        result.push(returnNumbers(numberBeforeDot.slice(3, 4)));
       }
     }
-    returnedString.push(`
-          ${hryvnias[parseInt(slicedNumber.slice(3, 4))]}
-          ${returnCoinsWithNumber(numberAfterDot)} `);
+    result.push(hryvnias[parseInt(numberBeforeDot.slice(3, 4))])
+    result.push(returnCoinsWithNumber(numberAfterDot))
 
-    return returnedString.toString().replace(/,/g, "");
+    const resultString = result.join(" ");
+    return resultString;
   }
 
-  if (slicedNumber.length === 3) {
-    const returnedString = [];
-    returnedString.push(returHundreds(slicedNumber.slice(0, 1)));
-    if (checkIfnumberBetwen11and19(slicedNumber.slice(1, 3))) {
-      returnedString.push(
-        ` ${hz5[parseInt(slicedNumber.slice(2, 3))]} ${hryvnias[0]}`
-      );
+  if (numberBeforeDot.length === 3) {
+    const result: string[] = []
+
+    result.push(returHundreds(numberBeforeDot.slice(0, 1)));
+    if (checkIfnumberBetwen11and19(numberBeforeDot.slice(1, 3))) {
+      result.push(dozensBeetween11and19[parseInt(numberBeforeDot.slice(2, 3))]);
+      result.push(hryvnias[0])
     } else {
-      returnedString.push(" "+dozens[parseInt(slicedNumber.slice(1, 2))] + " ");
-      if (slicedNumber.slice(2, 3) !== "0") {
-        returnedString.push(returnNumbers(slicedNumber.slice(2, 3)) + " ");
+      result.push(dozens[parseInt(numberBeforeDot.slice(1, 2))]);
+      if (numberBeforeDot.slice(2, 3) !== "0") {
+        result.push(returnNumbers(numberBeforeDot.slice(2, 3)));
       }
-      returnedString.push(returnHryvnias(slicedNumber.slice(2, 3)));
+      result.push(returnHryvnias(numberBeforeDot.slice(2, 3)));
     }
-    returnedString.push(`${returnCoinsWithNumber(numberAfterDot)}`);
-    return returnedString.toString().replace(/,/g, "");
+    result.push(returnCoinsWithNumber(numberAfterDot));
+    const resultString = result.join(" ")
+    return resultString
   }
 
-  if (slicedNumber.length === 2) {
-    const returnedString = [];
-    if (checkIfnumberBetwen11and19(slicedNumber)) {
-      returnedString.push(
-        `${hz5[parseInt(slicedNumber.slice(1, 2))]} гривень`
-      );
+  if (numberBeforeDot.length === 2) {
+    const result: string[] = []
+    if (checkIfnumberBetwen11and19(numberBeforeDot)) {
+      result.push(`${dozensBeetween11and19[parseInt(numberBeforeDot.slice(1, 2))]} гривень`);
     } else {
-      returnedString.push(returnDozens(slicedNumber.slice(0, 1)) + " ");
-      if (slicedNumber.slice(1, 2) !== "0") {
-        returnedString.push(returnNumbers(slicedNumber.slice(1, 2)) + " ");
+      result.push(returnDozens(numberBeforeDot.slice(0, 1)));
+      if (numberBeforeDot.slice(1, 2) !== "0") {
+        result.push(returnNumbers(numberBeforeDot.slice(1, 2)));
       }
-      returnedString.push(returnHryvnias(slicedNumber.slice(1, 2)));
+      result.push(returnHryvnias(numberBeforeDot.slice(1, 2)));
     }
-    returnedString.push(`${returnCoinsWithNumber(numberAfterDot)} `);
-    return returnedString.toString().replace(/,/g, "");
+    result.push(`${returnCoinsWithNumber(numberAfterDot)}`);
+    const resultString = result.join(" ")
+    return resultString;
   }
-  if (slicedNumber.length === 1) {
-    return `${returnNumbers(slicedNumber.slice(0, 1))} ${returnHryvnias(
-      slicedNumber.slice(0, 1)
-    )}${returnCoinsWithNumber(numberAfterDot)}`;
+  if (numberBeforeDot.length === 1) {
+    const result: string[] = []
+    result.push(returnNumbers(numberBeforeDot.slice(0, 1)));
+    result.push(returnHryvnias(numberBeforeDot.slice(0, 1)));
+    result.push(returnCoinsWithNumber(numberAfterDot));
+    const resultString = result.join(" ");
+    return resultString;
   }
   return "Помилочка";
 }
@@ -207,11 +203,11 @@ function returHundreds(string: string) {
 function returnCoinsWithNumber(string: string) {
   let returnedString = "";
   if (string.slice(0, 1) === "0") {
-    returnedString += ` ${string.slice(1, 2)} `;
+    returnedString += `${string.slice(1, 2)}`;
   } else {
-    returnedString += ` ${string}0 `;
+    returnedString += `${string}0`;
   }
-  returnedString += "копійок";
+  returnedString += " копійок";
   return returnedString;
 }
 
@@ -226,7 +222,7 @@ function returnDozens(string: string) {
   }
   return "";
 }
-function returnNumbers(string:string) {
+function returnNumbers(string: string) {
   const number = parseInt(string);
-  return numbers[number]
+  return numbers[number];
 }

@@ -37,7 +37,7 @@ var dozens = [
     "вісімдесят",
     "дев'яносто",
 ];
-var hz4 = [
+var numbers = [
     "нуль",
     "одна",
     "дві",
@@ -50,7 +50,7 @@ var hz4 = [
     "дев'ять",
     "десять",
 ];
-var hz5 = [
+var dozensBeetween11and19 = [
     "",
     "одинадцять",
     "дванадцять",
@@ -90,7 +90,7 @@ var hryvnias = [
     "гривень",
 ];
 function convertToWords(number) {
-    var slicedNumber = number.toString().split(".")[0];
+    var numberBeforeDot = number.toString().split(".")[0];
     var numberAfterDot = number.toString().split(".")[1];
     if (!numberAfterDot) {
         numberAfterDot = "00";
@@ -98,82 +98,92 @@ function convertToWords(number) {
     if (numberAfterDot.length > 2) {
         numberAfterDot = numberAfterDot.slice(0, 2);
     }
-    if (slicedNumber.length === 5) {
-        var returnedString = [];
-        if (checkIfnumberBetwen11and19(slicedNumber.slice(0, 2))) {
-            returnedString.push(hz5[parseInt(slicedNumber.slice(1, 2))]);
+    if (numberBeforeDot.length === 5) {
+        var result = [];
+        if (checkIfnumberBetwen11and19(numberBeforeDot.slice(0, 2))) {
+            result.push(dozensBeetween11and19[parseInt(numberBeforeDot.slice(1, 2))]);
         }
         else {
-            returnedString.push(returnDozens(slicedNumber.slice(0, 1)) + " ");
-            if (slicedNumber.slice(1, 2) !== "0") {
-                returnedString.push(hz4[parseInt(slicedNumber.slice(1, 2))]);
+            result.push(returnDozens(numberBeforeDot.slice(0, 1)));
+            if (numberBeforeDot.slice(1, 2) !== "0") {
+                result.push(returnNumbers(numberBeforeDot.slice(1, 2)));
             }
         }
-        returnedString.push(" \u0442\u0438\u0441\u044F\u0447 " + returHundreds(slicedNumber.slice(2, 3)) + " ");
-        if (checkIfnumberBetwen11and19(slicedNumber.slice(3, 5))) {
-            returnedString.push(hz5[parseInt(slicedNumber.slice(4, 5))] + " \u0433\u0440\u0438\u0432\u0435\u043D\u044C ");
+        result.push("\u0442\u0438\u0441\u044F\u0447 ".concat(returHundreds(numberBeforeDot.slice(2, 3))));
+        if (checkIfnumberBetwen11and19(numberBeforeDot.slice(3, 5))) {
+            result.push("".concat(dozensBeetween11and19[parseInt(numberBeforeDot.slice(4, 5))], " \u0433\u0440\u0438\u0432\u0435\u043D\u044C"));
         }
         else {
-            returnedString.push(dozens[parseInt(slicedNumber.slice(3, 4))] + " ");
-            if (slicedNumber.slice(4, 5) !== "0") {
-                returnedString.push(" " + hz4[parseInt(slicedNumber.slice(4, 5))] + " ");
+            result.push("".concat(dozens[parseInt(numberBeforeDot.slice(3, 4))]));
+            if (numberBeforeDot.slice(4, 5) !== "0") {
+                result.push(returnNumbers(numberBeforeDot.slice(4, 5)));
             }
-            returnedString.push("\n              " + returnHryvnias(slicedNumber.slice(4, 5)) + " \n              ");
+            result.push(returnHryvnias(numberBeforeDot.slice(4, 5)));
         }
-        returnedString.push("" + returnCoinsWithNumber(numberAfterDot));
-        return returnedString.toString().replace(/,/g, "");
+        result.push(returnCoinsWithNumber(numberAfterDot));
+        var resultString = result.join(" ");
+        return resultString;
     }
-    if (slicedNumber.length === 4) {
-        var returnedString = [];
-        returnedString.push(hz4[parseInt(slicedNumber.slice(0, 1))] + " \n          " + thousands[parseInt(slicedNumber.slice(0, 1))] + " \n          " + returHundreds(slicedNumber.slice(1, 2)) + " ");
-        //первые 3 буквы
-        if (checkIfnumberBetwen11and19(slicedNumber.slice(2, 4))) {
-            returnedString.push(hz5[parseInt(slicedNumber.slice(3, 4))]);
+    if (numberBeforeDot.length === 4) {
+        var result = [];
+        result.push(returnNumbers(numberBeforeDot.slice(0, 1)));
+        result.push(thousands[parseInt(numberBeforeDot.slice(0, 1))]);
+        result.push(returHundreds(numberBeforeDot.slice(1, 2)));
+        if (checkIfnumberBetwen11and19(numberBeforeDot.slice(2, 4))) {
+            result.push(dozensBeetween11and19[parseInt(numberBeforeDot.slice(3, 4))]);
         }
         else {
-            returnedString.push(dozens[parseInt(slicedNumber.slice(2, 3))] + " "
-            //че за магия
-            );
-            if (slicedNumber.slice(3, 4) !== "0") {
-                returnedString.push("" + hz4[parseInt(slicedNumber.slice(3, 4))]);
+            result.push(dozens[parseInt(numberBeforeDot.slice(2, 3))]);
+            if (numberBeforeDot.slice(3, 4) !== "0") {
+                result.push(returnNumbers(numberBeforeDot.slice(3, 4)));
             }
         }
-        returnedString.push("\n          " + hryvnias[parseInt(slicedNumber.slice(3, 4))] + " \n          " + returnCoinsWithNumber(numberAfterDot) + " ");
-        return returnedString.toString().replace(/,/g, "");
+        result.push(hryvnias[parseInt(numberBeforeDot.slice(3, 4))]);
+        result.push(returnCoinsWithNumber(numberAfterDot));
+        var resultString = result.join(" ");
+        return resultString;
     }
-    if (slicedNumber.length === 3) {
-        var returnedString = [];
-        returnedString.push(returHundreds(slicedNumber.slice(0, 1)) + " ");
-        if (checkIfnumberBetwen11and19(slicedNumber.slice(1, 3))) {
-            returnedString.push(" " + hz5[parseInt(slicedNumber.slice(2, 3))] + " \n              " + hryvnias[0]);
+    if (numberBeforeDot.length === 3) {
+        var result = [];
+        result.push(returHundreds(numberBeforeDot.slice(0, 1)));
+        if (checkIfnumberBetwen11and19(numberBeforeDot.slice(1, 3))) {
+            result.push(dozensBeetween11and19[parseInt(numberBeforeDot.slice(2, 3))]);
+            result.push(hryvnias[0]);
         }
         else {
-            returnedString.push(dozens[parseInt(slicedNumber.slice(1, 2))] + " ");
-            if (slicedNumber.slice(2, 3) !== "0") {
-                returnedString.push(hz4[parseInt(slicedNumber.slice(2, 3))] + " ");
+            result.push(dozens[parseInt(numberBeforeDot.slice(1, 2))]);
+            if (numberBeforeDot.slice(2, 3) !== "0") {
+                result.push(returnNumbers(numberBeforeDot.slice(2, 3)));
             }
-            returnedString.push(returnHryvnias(slicedNumber.slice(2, 3)) + " ");
+            result.push(returnHryvnias(numberBeforeDot.slice(2, 3)));
         }
-        returnedString.push(" " + returnCoinsWithNumber(numberAfterDot) + " ");
-        return returnedString.toString().replace(/,/g, "");
+        result.push(returnCoinsWithNumber(numberAfterDot));
+        var resultString = result.join(" ");
+        return resultString;
     }
-    if (slicedNumber.length === 2) {
-        var returnedString = [];
-        if (checkIfnumberBetwen11and19(slicedNumber)) {
-            returnedString.push(hz5[parseInt(slicedNumber.slice(1, 2))] + " \u0433\u0440\u0438\u0432\u0435\u043D\u044C ");
+    if (numberBeforeDot.length === 2) {
+        var result = [];
+        if (checkIfnumberBetwen11and19(numberBeforeDot)) {
+            result.push("".concat(dozensBeetween11and19[parseInt(numberBeforeDot.slice(1, 2))], " \u0433\u0440\u0438\u0432\u0435\u043D\u044C"));
         }
         else {
-            returnedString.push(returnDozens(slicedNumber.slice(0, 1)) + " ");
-            if (slicedNumber.slice(1, 2) !== "0") {
-                returnedString.push(hz4[parseInt(slicedNumber.slice(1, 2))] + " ");
+            result.push(returnDozens(numberBeforeDot.slice(0, 1)));
+            if (numberBeforeDot.slice(1, 2) !== "0") {
+                result.push(returnNumbers(numberBeforeDot.slice(1, 2)));
             }
-            returnedString.push(returnHryvnias(slicedNumber.slice(1, 2)) + " ");
+            result.push(returnHryvnias(numberBeforeDot.slice(1, 2)));
         }
-        returnedString.push(" " + returnCoinsWithNumber(numberAfterDot) + " ");
-        return returnedString.toString().replace(/,/g, "");
+        result.push("".concat(returnCoinsWithNumber(numberAfterDot)));
+        var resultString = result.join(" ");
+        return resultString;
     }
-    if (slicedNumber.length === 1) {
-        return hz4[parseInt(slicedNumber.slice(0, 1))] + " \n          " + returnHryvnias(slicedNumber.slice(0, 1)) + " \n          " + returnCoinsWithNumber(numberAfterDot);
+    if (numberBeforeDot.length === 1) {
+        var result = [];
+        result.push(returnNumbers(numberBeforeDot.slice(0, 1)));
+        result.push(returnHryvnias(numberBeforeDot.slice(0, 1)));
+        result.push(returnCoinsWithNumber(numberAfterDot));
+        var resultString = result.join(" ");
+        return resultString;
     }
     return "Помилочка";
 }
@@ -192,10 +202,10 @@ function returHundreds(string) {
 function returnCoinsWithNumber(string) {
     var returnedString = "";
     if (string.slice(0, 1) === "0") {
-        returnedString += string.slice(1, 2) + " ";
+        returnedString += "".concat(string.slice(1, 2));
     }
     else {
-        returnedString += string + "0 ";
+        returnedString += "".concat(string, "0");
     }
     returnedString += " копійок";
     return returnedString;
@@ -210,4 +220,8 @@ function returnDozens(string) {
         return dozens[number];
     }
     return "";
+}
+function returnNumbers(string) {
+    var number = parseInt(string);
+    return numbers[number];
 }
